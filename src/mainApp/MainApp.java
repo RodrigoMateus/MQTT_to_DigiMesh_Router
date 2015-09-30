@@ -22,6 +22,7 @@ public class MainApp {
 	static String REMOTE_NODE_IDENTIFIER = null;
 
 	// Payload é a quantidade de bytes que cabe em uma mensagem
+	// ou MTU (Maximum Transmission Unit)
 	static int PAYLOAD = 250;
 
 	/* MQTT */
@@ -76,9 +77,8 @@ public class MainApp {
 			remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
 			if (remoteDevice == null) {
 				System.out.println(
-						"Couldn't find the remote XBee device with '" + REMOTE_NODE_IDENTIFIER + "' Node Identifier.");
+						"Couldn't find the radio modem '" + REMOTE_NODE_IDENTIFIER + ".");
 				Statistic.incrementCountNoModem();
-				// System.exit(1);
 			}
 		} catch (XBeeException e) {
 			e.printStackTrace();

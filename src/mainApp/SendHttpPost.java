@@ -63,6 +63,7 @@ public class SendHttpPost {
 			}
 
 		} catch (TimeoutException e) {
+			LogRecord.insertLog(new String("TimeOut ERROR"));
 			System.out.println("TimeOut ERROR");
 		} catch (XBeeException e) {
 			Statistic.incrementCountBadPack();
