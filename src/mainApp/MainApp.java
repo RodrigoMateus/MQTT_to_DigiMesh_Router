@@ -71,20 +71,20 @@ public class MainApp {
 			myDevice.open();
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
 			myDevice.setReceiveTimeout(TIMEOUT_FOR_SYNC_OPERATIONS);
+			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
 
 			// Obtain the remote XBee device from the XBee network.
 			XBeeNetwork xbeeNetwork = myDevice.getNetwork();
 			remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
 			if (remoteDevice == null) {
-				System.out.println(
-						"Couldn't find the radio modem '" + REMOTE_NODE_IDENTIFIER + ".");
+				System.out.println("Couldn't find the radio modem '" + REMOTE_NODE_IDENTIFIER + ".");
 				Statistic.incrementCountNoModem();
 			}
 		} catch (XBeeException e) {
 			e.printStackTrace();
-			System.exit(1);
+			//System.exit(1);
 		}
-		Router router = new Router();
+		RouterMqtt router = new RouterMqtt();
 		router.runRouter();
 	}
 }
