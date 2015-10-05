@@ -8,7 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import com.digi.xbee.api.utils.Statistic;
 
-public class Router implements MqttCallback {
+public class RouterMqtt implements MqttCallback {
 
 	MqttClient mqttClient;
 
@@ -56,7 +56,6 @@ public class Router implements MqttCallback {
 
 		// Se a mensagem contém apenas texto
 		if (topic.toLowerCase().contains("text")) {
-
 			SendTextMessage.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_TXT,
 					MainApp.REMOTE_NODE_IDENTIFIER);
 		}
@@ -71,22 +70,6 @@ public class Router implements MqttCallback {
 			SendHttpPost.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_HTTP_POST_DATA,
 					MainApp.REMOTE_NODE_IDENTIFIER);
 			SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_SEND,
-					MainApp.REMOTE_NODE_IDENTIFIER);
-
-			System.out.println("Total Success " + Statistic.getCountOK());
-			System.out.println("Total Conect Error " + Statistic.getCountNoModem());
-			System.out.println("Total Send Error " + Statistic.getCountBadPack());
-		}
-
-		// Se a mensagem contém uma imagem
-		if (topic.toLowerCase().contains("png")) {
-
-			String fileName = "imagem.png";
-			SendFile.send(MainApp.myDevice, fileName.getBytes(), MainApp.ENDPOINT_FILENEW,
-					MainApp.REMOTE_NODE_IDENTIFIER);
-			SendFile.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_FILEDATA,
-					MainApp.REMOTE_NODE_IDENTIFIER);
-			SendFile.send(MainApp.myDevice, fileName.getBytes(), MainApp.ENDPOINT_FILECLOSE,
 					MainApp.REMOTE_NODE_IDENTIFIER);
 
 			System.out.println("Total Success " + Statistic.getCountOK());

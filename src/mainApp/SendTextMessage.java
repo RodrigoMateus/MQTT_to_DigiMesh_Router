@@ -28,7 +28,7 @@ public abstract class SendTextMessage {
 				Statistic.incrementCountNoModem();
 				System.out.println("Conect Error " + Statistic.getCountNoModem());
 
-				LogRecord.insertLog((new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
+				LogRecord.insertLog("log", (new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
 						+ ";Conect Error " + Statistic.getCountNoModem() + ";" + new String(dataToSend));
 
 			} else {
@@ -40,7 +40,7 @@ public abstract class SendTextMessage {
 				Statistic.incrementCountOK();
 				System.out.println("Success " + Statistic.getCountOK());
 
-				LogRecord.insertLog((new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
+				LogRecord.insertLog("log", (new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
 						+ ";Success " + Statistic.getCountOK() + ";" + new String(dataToSend));
 			}
 
@@ -48,7 +48,7 @@ public abstract class SendTextMessage {
 			Statistic.incrementCountBadPack();
 			System.out.println("Error " + Statistic.getCountBadPack());
 
-			LogRecord.insertLog((new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
+			LogRecord.insertLog("log", (new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
 					+ ";Send Error " + Statistic.getCountBadPack() + ";" + new String(dataToSend));
 
 			e.printStackTrace();

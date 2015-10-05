@@ -24,8 +24,9 @@ public class SendHttpPost {
 
 			case MainApp.ENDPOINT_HTTP_POST_INIT:
 
-				LogRecord.insertLog((new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())))
-						+ " : Inicio HTTP POST");
+				LogRecord.insertLog("log",
+						new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
+								+ " : Inicio HTTP POST");
 				break;
 
 			case MainApp.ENDPOINT_HTTP_POST_DATA:
@@ -57,18 +58,17 @@ public class SendHttpPost {
 
 				myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
 						MainApp.PROFILE_ID, dataToSend);
-				LogRecord.insertLog(
+				LogRecord.insertLog("log",
 						(new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))) + " : Fim");
 				break;
 			}
 
 		} catch (TimeoutException e) {
-			LogRecord.insertLog(new String("TimeOut ERROR"));
+			LogRecord.insertLog("log", new String("TimeOut ERROR"));
 			System.out.println("TimeOut ERROR");
 		} catch (XBeeException e) {
 			Statistic.incrementCountBadPack();
 			e.printStackTrace();
-			System.exit(1);
 		} finally {
 
 		}
