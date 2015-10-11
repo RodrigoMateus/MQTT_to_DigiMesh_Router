@@ -10,7 +10,12 @@ import com.digi.xbee.api.utils.Statistic;
 
 public class RouterMqtt implements MqttCallback {
 
-	MqttClient mqttClient;
+	// MqttClient mqttClient;
+
+	public RouterMqtt() {
+		super();
+		runRouter();
+	}
 
 	public void runRouter() {
 		try {
@@ -19,7 +24,7 @@ public class RouterMqtt implements MqttCallback {
 			e.printStackTrace();
 		}
 		testeSendMessage();
-		runMQTTClient();
+		// runMQTTClient();
 	}
 
 	public void testeSendMessage() {
@@ -28,16 +33,16 @@ public class RouterMqtt implements MqttCallback {
 		SendTextMessage.send(MainApp.myDevice, dataToSend, MainApp.ENDPOINT_TXT, MainApp.REMOTE_NODE_IDENTIFIER);
 	}
 
-	public void runMQTTClient() {
-		try {
-			mqttClient = new MqttClient(MainApp.BROKER_URL, MainApp.CLIENT_ID);
-			mqttClient.setCallback(this);
-			mqttClient.connect();
-			mqttClient.subscribe(MainApp.SUBSCRIBED_TOPIC, MainApp.QoS);
-		} catch (MqttException e) {
-			e.printStackTrace();
-		}
-	}
+	// public void runMQTTClient() {
+	// try {
+	// mqttClient = new MqttClient(MainApp.BROKER_URL, MainApp.CLIENT_ID);
+	// mqttClient.setCallback(this);
+	// mqttClient.connect();
+	// mqttClient.subscribe(MainApp.SUBSCRIBED_TOPIC, MainApp.QoS);
+	// } catch (MqttException e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	@Override
 	public void connectionLost(Throwable arg0) {
