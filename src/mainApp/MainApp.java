@@ -94,8 +94,5 @@ public class MainApp {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-
-		// RouterMqtt router = new RouterMqtt();
-		// router.runRouter();
 	}
 }

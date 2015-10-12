@@ -2,15 +2,11 @@ package mainApp;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import com.digi.xbee.api.utils.Statistic;
 
 public class RouterMqtt implements MqttCallback {
-
-	// MqttClient mqttClient;
 
 	public RouterMqtt() {
 		super();
@@ -24,7 +20,6 @@ public class RouterMqtt implements MqttCallback {
 			e.printStackTrace();
 		}
 		testeSendMessage();
-		// runMQTTClient();
 	}
 
 	public void testeSendMessage() {
@@ -32,17 +27,6 @@ public class RouterMqtt implements MqttCallback {
 		dataToSend = new String("Teste: Servidor On-line").getBytes();
 		SendTextMessage.send(MainApp.myDevice, dataToSend, MainApp.ENDPOINT_TXT, MainApp.REMOTE_NODE_IDENTIFIER);
 	}
-
-	// public void runMQTTClient() {
-	// try {
-	// mqttClient = new MqttClient(MainApp.BROKER_URL, MainApp.CLIENT_ID);
-	// mqttClient.setCallback(this);
-	// mqttClient.connect();
-	// mqttClient.subscribe(MainApp.SUBSCRIBED_TOPIC, MainApp.QoS);
-	// } catch (MqttException e) {
-	// e.printStackTrace();
-	// }
-	// }
 
 	@Override
 	public void connectionLost(Throwable arg0) {
