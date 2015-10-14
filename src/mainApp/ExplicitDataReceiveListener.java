@@ -6,12 +6,14 @@ import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
+import com.maykot.maykottracker.models.ProxyResponse;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
@@ -33,14 +35,18 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 		public TrataRequisao(ExplicitXBeeMessage explicitXBeeMessage) {
 			this.explicitXBeeMessage = explicitXBeeMessage;
+			byte[] payload = explicitXBeeMessage.getData();
+			ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
+			
 			System.out.println("Chegou a resposta!!!");
 
 			MqttMessage mqttMessage = new MqttMessage();
-			String resposta = "Resposta";
+			String resposta = new String(proxyResponse.getBody());
+			String mqttClientId = proxyResponse.getMqttClientId();
 			mqttMessage.setPayload(resposta.getBytes());
 
 			try {
-				MainApp.mqttClient.publish("maykot/teste", mqttMessage);
+				MainApp.mqttClient.publish("maykot/" + mqttClientId, mqttMessage);
 			} catch (MqttPersistenceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

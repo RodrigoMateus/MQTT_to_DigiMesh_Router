@@ -24,6 +24,9 @@ public class SendHttpPost {
 
 			case MainApp.ENDPOINT_HTTP_POST_INIT:
 
+				myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
+						MainApp.PROFILE_ID, dataToSend);
+				
 				LogRecord.insertLog("log",
 						new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
 								+ " : Inicio HTTP POST");

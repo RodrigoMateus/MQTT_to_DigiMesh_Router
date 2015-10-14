@@ -10,16 +10,12 @@ public class RouterMqtt implements MqttCallback {
 
 	public RouterMqtt() {
 		super();
-		runRouter();
-	}
-
-	public void runRouter() {
 		try {
 			Thread.sleep(1000);
+			testeSendMessage();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		testeSendMessage();
 	}
 
 	public void testeSendMessage() {
@@ -52,9 +48,13 @@ public class RouterMqtt implements MqttCallback {
 		// Se a mensagem contém um HTTP POST
 		if (topic.toLowerCase().contains("http_post")) {
 
+			String[] topicWords = topic.split("/");
+			String clientId = topicWords[2];
+			byte[] mqttClientId = clientId.getBytes();
+			
 			byte[] noMessage = new String("noMessage").getBytes();
 
-			SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_INIT,
+			SendHttpPost.send(MainApp.myDevice, mqttClientId, MainApp.ENDPOINT_HTTP_POST_INIT,
 					MainApp.REMOTE_NODE_IDENTIFIER);
 			SendHttpPost.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_HTTP_POST_DATA,
 					MainApp.REMOTE_NODE_IDENTIFIER);
