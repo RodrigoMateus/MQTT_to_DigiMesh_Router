@@ -1,5 +1,9 @@
 package mainApp;
 
+/***************************
+ * MQTT to DigiMesh Router *
+ ***************************/
+
 import java.io.IOException;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;

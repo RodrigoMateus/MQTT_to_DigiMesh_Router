@@ -25,15 +25,15 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 	@Override
 	public void explicitDataReceived(ExplicitXBeeMessage explicitXBeeMessage) {
 		ExecutorService executor = Executors.newFixedThreadPool(20);
-		executor.execute(new TrataRequisao(explicitXBeeMessage));
+		executor.execute(new TreatRequest(explicitXBeeMessage));
 		executor.shutdown();
 	}
 
-	class TrataRequisao extends Thread {
+	class TreatRequest extends Thread {
 
 		ExplicitXBeeMessage explicitXBeeMessage;
 
-		public TrataRequisao(ExplicitXBeeMessage explicitXBeeMessage) {
+		public TreatRequest(ExplicitXBeeMessage explicitXBeeMessage) {
 			this.explicitXBeeMessage = explicitXBeeMessage;
 			byte[] payload = explicitXBeeMessage.getData();
 			ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
@@ -41,9 +41,9 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 			System.out.println("Chegou a resposta!!!");
 
 			MqttMessage mqttMessage = new MqttMessage();
-			String resposta = new String(proxyResponse.getBody());
+			String response = new String(proxyResponse.getBody());
 			String mqttClientId = proxyResponse.getMqttClientId();
-			mqttMessage.setPayload(resposta.getBytes());
+			mqttMessage.setPayload(response.getBytes());
 
 			try {
 				MainApp.mqttClient.publish("maykot/" + mqttClientId, mqttMessage);

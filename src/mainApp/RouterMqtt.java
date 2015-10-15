@@ -51,7 +51,7 @@ public class RouterMqtt implements MqttCallback {
 			String[] topicWords = topic.split("/");
 			String clientId = topicWords[2];
 			byte[] mqttClientId = clientId.getBytes();
-			
+
 			byte[] noMessage = new String("noMessage").getBytes();
 
 			SendHttpPost.send(MainApp.myDevice, mqttClientId, MainApp.ENDPOINT_HTTP_POST_INIT,
