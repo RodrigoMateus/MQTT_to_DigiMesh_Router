@@ -88,7 +88,7 @@ public class MainApp {
 			}
 		} catch (XBeeException e) {
 			e.printStackTrace();
-			System.exit(1);
+			//System.exit(1);
 		}
 
 		try {
