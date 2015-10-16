@@ -2,41 +2,26 @@ package mainApp;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import com.digi.xbee.api.utils.Statistic;
 
 public class RouterMqtt implements MqttCallback {
 
-	MqttClient mqttClient;
-
-	public void runRouter() {
+	public RouterMqtt() {
+		super();
 		try {
 			Thread.sleep(1000);
+			testeSendMessage();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		testeSendMessage();
-		runMQTTClient();
 	}
 
 	public void testeSendMessage() {
 		byte[] dataToSend = null;
 		dataToSend = new String("Teste: Servidor On-line").getBytes();
 		SendTextMessage.send(MainApp.myDevice, dataToSend, MainApp.ENDPOINT_TXT, MainApp.REMOTE_NODE_IDENTIFIER);
-	}
-
-	public void runMQTTClient() {
-		try {
-			mqttClient = new MqttClient(MainApp.BROKER_URL, MainApp.CLIENT_ID);
-			mqttClient.setCallback(this);
-			mqttClient.connect();
-			mqttClient.subscribe(MainApp.SUBSCRIBED_TOPIC, MainApp.QoS);
-		} catch (MqttException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -63,9 +48,13 @@ public class RouterMqtt implements MqttCallback {
 		// Se a mensagem contém um HTTP POST
 		if (topic.toLowerCase().contains("http_post")) {
 
+			String[] topicWords = topic.split("/");
+			String clientId = topicWords[2];
+			byte[] mqttClientId = clientId.getBytes();
+
 			byte[] noMessage = new String("noMessage").getBytes();
 
-			SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_INIT,
+			SendHttpPost.send(MainApp.myDevice, mqttClientId, MainApp.ENDPOINT_HTTP_POST_INIT,
 					MainApp.REMOTE_NODE_IDENTIFIER);
 			SendHttpPost.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_HTTP_POST_DATA,
 					MainApp.REMOTE_NODE_IDENTIFIER);

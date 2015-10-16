@@ -23,14 +23,14 @@ public class SendHttpPost {
 			switch (ENDPOINT) {
 
 			case MainApp.ENDPOINT_HTTP_POST_INIT:
-
+				myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
+						MainApp.PROFILE_ID, dataToSend);
 				LogRecord.insertLog("log",
 						new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
 								+ " : Inicio HTTP POST");
 				break;
 
 			case MainApp.ENDPOINT_HTTP_POST_DATA:
-
 				int dataSize = dataToSend.length;
 				int first = 0;
 				int last = MainApp.PAYLOAD;
@@ -38,15 +38,12 @@ public class SendHttpPost {
 				do {
 					try {
 						byte[] partOfData = Arrays.copyOfRange(dataToSend, first, last);
-
 						myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
 								MainApp.PROFILE_ID, partOfData);
-
 						first = last;
 						last = last + MainApp.PAYLOAD;
 						if (last > dataSize)
 							last = dataSize;
-
 						Statistic.incrementCountOK();
 					} catch (TimeoutException e) {
 						System.out.println("TimeOut ERROR");
@@ -55,14 +52,12 @@ public class SendHttpPost {
 				break;
 
 			case MainApp.ENDPOINT_HTTP_POST_SEND:
-
 				myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
 						MainApp.PROFILE_ID, dataToSend);
 				LogRecord.insertLog("log",
 						(new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))) + " : Fim");
 				break;
 			}
-
 		} catch (TimeoutException e) {
 			LogRecord.insertLog("log", new String("TimeOut ERROR"));
 			System.out.println("TimeOut ERROR");
@@ -70,7 +65,6 @@ public class SendHttpPost {
 			Statistic.incrementCountBadPack();
 			e.printStackTrace();
 		} finally {
-
 		}
 	}
 }

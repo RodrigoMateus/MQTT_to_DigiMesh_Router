@@ -1,6 +1,13 @@
 package mainApp;
 
+/***************************
+ * MQTT to DigiMesh Router *
+ ***************************/
+
 import java.io.IOException;
+
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.RemoteXBeeDevice;
@@ -30,15 +37,14 @@ public class MainApp {
 	static String CLIENT_ID = null;
 	static String SUBSCRIBED_TOPIC = null;
 	static int QoS = -1;
+	static MqttClient mqttClient;
 
 	/* Endpoints, clusterID and profileID */
 	static final int ENDPOINT_TXT = 11;
-	static final int ENDPOINT_FILENEW = 21;
-	static final int ENDPOINT_FILEDATA = 22;
-	static final int ENDPOINT_FILECLOSE = 23;
 	static final int ENDPOINT_HTTP_POST_INIT = 31;
 	static final int ENDPOINT_HTTP_POST_DATA = 32;
 	static final int ENDPOINT_HTTP_POST_SEND = 33;
+	static final int ENDPOINT_HTTP_RESPONSE = 41;
 	static final int CLUSTER_ID = 1;
 	static final int PROFILE_ID = 1;
 
@@ -83,8 +89,18 @@ public class MainApp {
 		} catch (XBeeException e) {
 			e.printStackTrace();
 			//System.exit(1);
+<<<<<<< HEAD
+=======
 		}
-		RouterMqtt router = new RouterMqtt();
-		router.runRouter();
+
+		try {
+			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID);
+			mqttClient.setCallback(new RouterMqtt());
+			mqttClient.connect();
+			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
+		} catch (MqttException e) {
+			e.printStackTrace();
+>>>>>>> Implement_ProxyResponse
+		}
 	}
 }
