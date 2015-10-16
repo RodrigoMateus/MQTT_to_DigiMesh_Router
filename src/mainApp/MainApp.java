@@ -89,8 +89,6 @@ public class MainApp {
 		} catch (XBeeException e) {
 			e.printStackTrace();
 			//System.exit(1);
-<<<<<<< HEAD
-=======
 		}
 
 		try {
@@ -100,7 +98,6 @@ public class MainApp {
 			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
 		} catch (MqttException e) {
 			e.printStackTrace();
->>>>>>> Implement_ProxyResponse
 		}
 	}
 }
