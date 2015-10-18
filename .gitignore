@@ -58,3 +58,4 @@ bin/.gitignore
 /log.txt
 /LogRecord.txt
 /.DS_Store
+*.class

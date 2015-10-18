@@ -13,7 +13,7 @@ import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
-import com.maykot.maykottracker.models.ProxyResponse;
+import com.maykot.maykottracker.radio.ProxyResponse;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
@@ -36,17 +36,19 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 		public TreatRequest(ExplicitXBeeMessage explicitXBeeMessage) {
 			this.explicitXBeeMessage = explicitXBeeMessage;
 			byte[] payload = explicitXBeeMessage.getData();
+		
 			ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
 			
 			System.out.println("Chegou a resposta!!!");
 
 			MqttMessage mqttMessage = new MqttMessage();
-			String response = new String(proxyResponse.getBody());
 			String mqttClientId = proxyResponse.getMqttClientId();
-			mqttMessage.setPayload(response.getBytes());
+			String idMessage = proxyResponse.getIdMessage();
+			
+			mqttMessage.setPayload(payload);
 
 			try {
-				MainApp.mqttClient.publish("maykot/" + mqttClientId, mqttMessage);
+				MainApp.mqttClient.publish("maykot/" + mqttClientId+"/"+idMessage, mqttMessage);
 			} catch (MqttPersistenceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
