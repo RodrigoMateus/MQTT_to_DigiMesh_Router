@@ -44,7 +44,9 @@ public class MainApp {
 	static final int ENDPOINT_HTTP_POST_INIT = 31;
 	static final int ENDPOINT_HTTP_POST_DATA = 32;
 	static final int ENDPOINT_HTTP_POST_SEND = 33;
-	static final int ENDPOINT_HTTP_RESPONSE = 41;
+	static final int ENDPOINT_RESPONSE_INIT = 41;
+	static final int ENDPOINT_RESPONSE_DATA = 42;
+	static final int ENDPOINT_RESPONSE_SEND = 43;
 	static final int CLUSTER_ID = 1;
 	static final int PROFILE_ID = 1;
 

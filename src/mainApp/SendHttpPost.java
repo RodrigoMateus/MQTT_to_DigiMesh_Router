@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import com.digi.xbee.api.DigiMeshDevice;
+import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.utils.LogRecord;
@@ -12,7 +13,7 @@ import com.digi.xbee.api.utils.Statistic;
 
 public class SendHttpPost {
 
-	public static void send(DigiMeshDevice myDevice, byte[] dataToSend, int ENDPOINT, String REMOTE_NODE_IDENTIFIER) {
+	public static void send(DigiMeshDevice myDevice, byte[] dataToSend, int ENDPOINT, RemoteXBeeDevice remoteDevice) {
 
 		try {
 			if (!myDevice.isOpen()) {
@@ -23,8 +24,8 @@ public class SendHttpPost {
 			switch (ENDPOINT) {
 
 			case MainApp.ENDPOINT_HTTP_POST_INIT:
-				myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
-						MainApp.PROFILE_ID, dataToSend);
+				myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
+						dataToSend);
 				LogRecord.insertLog("log",
 						new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
 								+ " : Inicio HTTP POST");
@@ -38,7 +39,7 @@ public class SendHttpPost {
 				do {
 					try {
 						byte[] partOfData = Arrays.copyOfRange(dataToSend, first, last);
-						myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
+						myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
 								MainApp.PROFILE_ID, partOfData);
 						first = last;
 						last = last + MainApp.PAYLOAD;
@@ -52,8 +53,8 @@ public class SendHttpPost {
 				break;
 
 			case MainApp.ENDPOINT_HTTP_POST_SEND:
-				myDevice.sendExplicitData(MainApp.remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
-						MainApp.PROFILE_ID, dataToSend);
+				myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
+						dataToSend);
 				LogRecord.insertLog("log",
 						(new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))) + " : Fim");
 				break;

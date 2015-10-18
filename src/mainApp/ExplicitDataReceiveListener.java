@@ -1,6 +1,7 @@
 package mainApp;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
@@ -21,6 +22,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 	FileChannel fileChannel;
 	ByteBuffer buffer;
 	boolean fileExist = false;
+	String mqttClientId;
 
 	@Override
 	public void explicitDataReceived(ExplicitXBeeMessage explicitXBeeMessage) {
@@ -35,32 +37,56 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 		public TreatRequest(ExplicitXBeeMessage explicitXBeeMessage) {
 			this.explicitXBeeMessage = explicitXBeeMessage;
-			byte[] payload = explicitXBeeMessage.getData();
-		
-			ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
-			
-			System.out.println("Chegou a resposta!!!");
-
-			MqttMessage mqttMessage = new MqttMessage();
-			String mqttClientId = proxyResponse.getMqttClientId();
-			String idMessage = proxyResponse.getIdMessage();
-			
-			mqttMessage.setPayload(payload);
-
-			try {
-				MainApp.mqttClient.publish("maykot/" + mqttClientId+"/"+idMessage, mqttMessage);
-			} catch (MqttPersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MqttException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 		@Override
 		public void run() {
+			int endPoint = explicitXBeeMessage.getDestinationEndpoint();
+			switch (endPoint) {
 
+			case MainApp.ENDPOINT_RESPONSE_INIT:
+
+				mqttClientId = new String(explicitXBeeMessage.getData());
+				System.out.println("MQTT Client ID = " + mqttClientId);
+				break;
+
+			case MainApp.ENDPOINT_RESPONSE_DATA:
+
+				try {
+					byteArrayOutputStream.write(explicitXBeeMessage.getData());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				break;
+
+			case MainApp.ENDPOINT_RESPONSE_SEND:
+
+				byte[] payload = byteArrayOutputStream.toByteArray();
+				byteArrayOutputStream.reset();
+
+				ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
+				System.out.println("Chegou a resposta!!!");
+
+				MqttMessage mqttMessage = new MqttMessage();
+				String mqttClientId = proxyResponse.getMqttClientId();
+				String idMessage = proxyResponse.getIdMessage();
+
+				mqttMessage.setPayload(payload);
+
+				try {
+					MainApp.mqttClient.publish("maykot/" + mqttClientId + "/" + idMessage, mqttMessage);
+				} catch (MqttPersistenceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MqttException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
 }

@@ -54,12 +54,9 @@ public class RouterMqtt implements MqttCallback {
 
 			byte[] noMessage = new String("noMessage").getBytes();
 
-			SendHttpPost.send(MainApp.myDevice, mqttClientId, MainApp.ENDPOINT_HTTP_POST_INIT,
-					MainApp.REMOTE_NODE_IDENTIFIER);
-			SendHttpPost.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_HTTP_POST_DATA,
-					MainApp.REMOTE_NODE_IDENTIFIER);
-			SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_SEND,
-					MainApp.REMOTE_NODE_IDENTIFIER);
+			SendHttpPost.send(MainApp.myDevice, mqttClientId, MainApp.ENDPOINT_HTTP_POST_INIT, MainApp.remoteDevice);
+			SendHttpPost.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_HTTP_POST_DATA, MainApp.remoteDevice);
+			SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_SEND, MainApp.remoteDevice);
 
 			System.out.println("Total Success " + Statistic.getCountOK());
 			System.out.println("Total Conect Error " + Statistic.getCountNoModem());
