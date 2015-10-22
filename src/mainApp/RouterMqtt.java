@@ -19,9 +19,14 @@ public class RouterMqtt implements MqttCallback {
 	}
 
 	public void testeSendMessage() {
-		byte[] dataToSend = null;
-		dataToSend = new String("Teste: Servidor On-line").getBytes();
-		SendTextMessage.send(MainApp.myDevice, dataToSend, MainApp.ENDPOINT_TXT, MainApp.REMOTE_NODE_IDENTIFIER);
+		try {
+			byte[] dataToSend = null;
+			dataToSend = new String("Teste: Servidor On-line").getBytes();
+			SendTextMessage.send(MainApp.myDevice, dataToSend, MainApp.ENDPOINT_TXT, MainApp.REMOTE_NODE_IDENTIFIER);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -55,7 +60,8 @@ public class RouterMqtt implements MqttCallback {
 			byte[] noMessage = new String("noMessage").getBytes();
 
 			SendHttpPost.send(MainApp.myDevice, mqttClientId, MainApp.ENDPOINT_HTTP_POST_INIT, MainApp.remoteDevice);
-			SendHttpPost.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_HTTP_POST_DATA, MainApp.remoteDevice);
+			SendHttpPost.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_HTTP_POST_DATA,
+					MainApp.remoteDevice);
 			SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_SEND, MainApp.remoteDevice);
 
 			System.out.println("Total Success " + Statistic.getCountOK());

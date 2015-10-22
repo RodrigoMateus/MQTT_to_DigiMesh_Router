@@ -12,6 +12,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeNetwork;
+import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.APIOutputMode;
 import com.digi.xbee.api.utils.DeviceConfig;
@@ -79,6 +80,7 @@ public class MainApp {
 			myDevice.open();
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
 			myDevice.setReceiveTimeout(TIMEOUT_FOR_SYNC_OPERATIONS);
+			myDevice.addModemStatusListener(new ModemStatusReceiveListener());
 			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
 
 			// Obtain the remote XBee device from the XBee network.
@@ -90,7 +92,7 @@ public class MainApp {
 			}
 		} catch (XBeeException e) {
 			e.printStackTrace();
-			//System.exit(1);
+			// System.exit(1);
 		}
 
 		try {
@@ -99,6 +101,16 @@ public class MainApp {
 			mqttClient.connect();
 			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
 		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			myDevice.reset();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XBeeException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
