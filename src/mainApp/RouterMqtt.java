@@ -24,7 +24,6 @@ public class RouterMqtt implements MqttCallback {
 			dataToSend = new String("Teste: Servidor On-line").getBytes();
 			SendTextMessage.send(MainApp.myDevice, dataToSend, MainApp.ENDPOINT_TXT, MainApp.REMOTE_NODE_IDENTIFIER);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -56,6 +55,8 @@ public class RouterMqtt implements MqttCallback {
 			String[] topicWords = topic.split("/");
 			String clientId = topicWords[2];
 			byte[] mqttClientId = clientId.getBytes();
+			String messageId = topicWords[2];
+			byte[] mqttMessageId = messageId.getBytes();
 
 			byte[] noMessage = new String("noMessage").getBytes();
 
