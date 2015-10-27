@@ -43,20 +43,14 @@ public class RouterMqtt implements MqttCallback {
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 
-		// Se a mensagem contém apenas texto
-		if (topic.toLowerCase().contains("text")) {
-			SendTextMessage.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_TXT,
-					MainApp.REMOTE_NODE_IDENTIFIER);
-		}
-
 		// Se a mensagem contém um HTTP POST
 		if (topic.toLowerCase().contains("http_post")) {
 
 			String[] topicWords = topic.split("/");
 			String clientId = topicWords[2];
 			byte[] mqttClientId = clientId.getBytes();
-			String messageId = topicWords[2];
-			byte[] mqttMessageId = messageId.getBytes();
+			// String messageId = topicWords[2];
+			// byte[] mqttMessageId = messageId.getBytes();
 
 			byte[] noMessage = new String("noMessage").getBytes();
 
@@ -68,6 +62,28 @@ public class RouterMqtt implements MqttCallback {
 			System.out.println("Total Success " + Statistic.getCountOK());
 			System.out.println("Total Conect Error " + Statistic.getCountNoModem());
 			System.out.println("Total Send Error " + Statistic.getCountBadPack());
+		}
+
+		// Se a mensagem contém um comando JAVA
+		if (topic.toLowerCase().contains("command")) {
+			String command = message.getPayload().toString();
+
+			switch (command) {
+
+			case "reset":
+				MainApp.myDevice.reset();
+				System.out.println("Radio RESET.");
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		// Se a mensagem contém apenas texto
+		if (topic.toLowerCase().contains("text")) {
+			SendTextMessage.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_TXT,
+					MainApp.REMOTE_NODE_IDENTIFIER);
 		}
 	}
 }
