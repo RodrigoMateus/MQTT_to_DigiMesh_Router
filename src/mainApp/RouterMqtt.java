@@ -66,13 +66,13 @@ public class RouterMqtt implements MqttCallback {
 
 		// Se a mensagem contém um comando JAVA
 		if (topic.toLowerCase().contains("command")) {
-			String command = message.getPayload().toString();
+			String command = new String(message.getPayload());
 
 			switch (command) {
 
 			case "reset":
 				String[] topicWords = topic.split("/");
-				String clientId = topicWords[2];
+				String clientId = topicWords[1];
 				MainApp.modemStatusReceiveListener.modemReset(clientId);
 				break;
 
