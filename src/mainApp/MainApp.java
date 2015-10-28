@@ -39,6 +39,7 @@ public class MainApp {
 	static String SUBSCRIBED_TOPIC = null;
 	static int QoS = -1;
 	static MqttClient mqttClient;
+	static ModemStatusReceiveListener modemStatusReceiveListener;
 
 	/* Endpoints, clusterID and profileID */
 	static final int ENDPOINT_TXT = 11;
@@ -75,12 +76,13 @@ public class MainApp {
 		new Statistic();
 
 		myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
+		modemStatusReceiveListener = new ModemStatusReceiveListener();
 
 		try {
 			myDevice.open();
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
 			myDevice.setReceiveTimeout(TIMEOUT_FOR_SYNC_OPERATIONS);
-			myDevice.addModemStatusListener(new ModemStatusReceiveListener());
+			myDevice.addModemStatusListener(modemStatusReceiveListener);
 			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
 
 			// Obtain the remote XBee device from the XBee network.

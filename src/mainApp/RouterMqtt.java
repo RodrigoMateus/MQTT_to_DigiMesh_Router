@@ -71,8 +71,9 @@ public class RouterMqtt implements MqttCallback {
 			switch (command) {
 
 			case "reset":
-				MainApp.myDevice.reset();
-				System.out.println("Radio RESET.");
+				String[] topicWords = topic.split("/");
+				String clientId = topicWords[2];
+				MainApp.modemStatusReceiveListener.modemReset(clientId);
 				break;
 
 			default:
