@@ -4,7 +4,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
-import com.maykot.maykottracker.radio.ProxyResponse;
+import com.maykot.radiolibrary.ProxyResponse;
 
 public class MQTTMonitor {
 

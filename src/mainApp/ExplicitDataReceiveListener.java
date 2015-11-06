@@ -11,7 +11,7 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
-import com.maykot.maykottracker.radio.ProxyResponse;
+import com.maykot.radiolibrary.ProxyResponse;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 

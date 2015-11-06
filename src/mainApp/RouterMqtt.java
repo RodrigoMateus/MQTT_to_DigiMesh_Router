@@ -10,8 +10,8 @@ import com.digi.xbee.api.exceptions.TransmitException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.Statistic;
-import com.maykot.maykottracker.radio.ErrorCode;
-import com.maykot.maykottracker.radio.ProxyResponse;
+import com.maykot.radiolibrary.ErrorCode;
+import com.maykot.radiolibrary.ProxyResponse;
 
 public class RouterMqtt implements MqttCallback {
 
