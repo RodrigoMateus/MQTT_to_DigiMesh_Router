@@ -77,6 +77,19 @@ public class MainApp {
 		myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
 		modemStatusReceiveListener = new ModemStatusReceiveListener();
 
+		openDevice();
+
+		try {
+			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID);
+			mqttClient.setCallback(new RouterMqtt());
+			mqttClient.connect();
+			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void openDevice() {
 		try {
 			myDevice.open();
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
@@ -94,15 +107,6 @@ public class MainApp {
 		} catch (XBeeException e) {
 			e.printStackTrace();
 			// System.exit(1);
-		}
-
-		try {
-			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID);
-			mqttClient.setCallback(new RouterMqtt());
-			mqttClient.connect();
-			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
-		} catch (MqttException e) {
-			e.printStackTrace();
 		}
 	}
 }

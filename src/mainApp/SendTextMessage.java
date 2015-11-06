@@ -12,7 +12,6 @@ import com.digi.xbee.api.utils.Statistic;
 
 public abstract class SendTextMessage {
 
-	@SuppressWarnings("null")
 	public static void send(DigiMeshDevice myDevice, byte[] dataToSend, int ENDPOINT, String REMOTE_NODE_IDENTIFIER) {
 
 		try {
@@ -23,7 +22,7 @@ public abstract class SendTextMessage {
 			XBeeNetwork xbeeNetwork = myDevice.getNetwork();
 			RemoteXBeeDevice remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
 			if (remoteDevice == null) {
-				System.out.println("Couldn't find the remote XTend device named '" + remoteDevice.getNodeID());
+				System.out.println("Couldn't find the remote XTend device named '");
 
 				Statistic.incrementCountNoModem();
 				System.out.println("Conect Error " + Statistic.getCountNoModem());

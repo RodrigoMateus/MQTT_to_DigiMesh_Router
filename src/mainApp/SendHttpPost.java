@@ -7,65 +7,55 @@ import java.util.Date;
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.exceptions.TimeoutException;
-import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.Statistic;
 
 public class SendHttpPost {
 
-	public static void send(DigiMeshDevice myDevice, byte[] dataToSend, int ENDPOINT, RemoteXBeeDevice remoteDevice) {
+	public static void send(DigiMeshDevice myDevice, byte[] dataToSend, int ENDPOINT, RemoteXBeeDevice remoteDevice)
+			throws Exception {
 
-		try {
-			if (!myDevice.isOpen()) {
-				myDevice.open();
-				System.out.println("Device is open now!");
-			}
+		if (!myDevice.isOpen()) {
+			myDevice.open();
+			System.out.println("Device is open now!");
+		}
 
-			switch (ENDPOINT) {
+		switch (ENDPOINT) {
 
-			case MainApp.ENDPOINT_HTTP_POST_INIT:
-				myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
-						dataToSend);
-				LogRecord.insertLog("log",
-						new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
-								+ " : Inicio HTTP POST");
-				break;
+		case MainApp.ENDPOINT_HTTP_POST_INIT:
+			myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
+					dataToSend);
+			LogRecord.insertLog("log", new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
+					+ " : Inicio HTTP POST");
+			break;
 
-			case MainApp.ENDPOINT_HTTP_POST_DATA:
-				int dataSize = dataToSend.length;
-				int first = 0;
-				int last = MainApp.PAYLOAD;
+		case MainApp.ENDPOINT_HTTP_POST_DATA:
+			int dataSize = dataToSend.length;
+			int first = 0;
+			int last = MainApp.PAYLOAD;
 
-				do {
-					try {
-						byte[] partOfData = Arrays.copyOfRange(dataToSend, first, last);
-						myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID,
-								MainApp.PROFILE_ID, partOfData);
-						first = last;
-						last = last + MainApp.PAYLOAD;
-						if (last > dataSize)
-							last = dataSize;
-						Statistic.incrementCountOK();
-					} catch (TimeoutException e) {
-						System.out.println("TimeOut ERROR");
-					}
-				} while (first < dataSize);
-				break;
+			do {
+				try {
+					byte[] partOfData = Arrays.copyOfRange(dataToSend, first, last);
+					myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
+							partOfData);
+					first = last;
+					last = last + MainApp.PAYLOAD;
+					if (last > dataSize)
+						last = dataSize;
+					Statistic.incrementCountOK();
+				} catch (TimeoutException e) {
+					System.out.println("TimeOut ERROR");
+				}
+			} while (first < dataSize);
+			break;
 
-			case MainApp.ENDPOINT_HTTP_POST_SEND:
-				myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
-						dataToSend);
-				LogRecord.insertLog("log",
-						(new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))) + " : Fim");
-				break;
-			}
-		} catch (TimeoutException e) {
-			LogRecord.insertLog("log", new String("TimeOut ERROR"));
-			System.out.println("TimeOut ERROR");
-		} catch (XBeeException e) {
-			Statistic.incrementCountBadPack();
-			e.printStackTrace();
-		} finally {
+		case MainApp.ENDPOINT_HTTP_POST_SEND:
+			myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
+					dataToSend);
+			LogRecord.insertLog("log",
+					(new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))) + " : Fim");
+			break;
 		}
 	}
 }

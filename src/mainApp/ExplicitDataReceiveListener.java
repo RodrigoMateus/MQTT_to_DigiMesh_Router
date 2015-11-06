@@ -8,9 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
@@ -67,21 +64,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 				ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
 				System.out.println("Chegou a resposta!!!");
 
-				MqttMessage mqttMessage = new MqttMessage();
-				String mqttClientId = proxyResponse.getMqttClientId();
-				String idMessage = proxyResponse.getIdMessage();
-
-				mqttMessage.setPayload(payload);
-
-				try {
-					MainApp.mqttClient.publish("maykot/" + mqttClientId + "/" + idMessage, mqttMessage);
-				} catch (MqttPersistenceException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (MqttException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				new MQTTMonitor().sendMQTT(proxyResponse, payload);
 				break;
 
 			default:
