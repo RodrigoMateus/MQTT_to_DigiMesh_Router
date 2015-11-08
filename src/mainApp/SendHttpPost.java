@@ -25,8 +25,6 @@ public class SendHttpPost {
 		case MainApp.ENDPOINT_HTTP_POST_INIT:
 			myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
 					dataToSend);
-			LogRecord.insertLog("log", new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
-					+ " : Inicio HTTP POST");
 			break;
 
 		case MainApp.ENDPOINT_HTTP_POST_DATA:
@@ -53,8 +51,6 @@ public class SendHttpPost {
 		case MainApp.ENDPOINT_HTTP_POST_SEND:
 			myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
 					dataToSend);
-			LogRecord.insertLog("log",
-					(new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))) + " : Fim");
 			break;
 		}
 	}

@@ -60,3 +60,6 @@ bin/.gitignore
 /.DS_Store
 *.class
 /Maykot_Router-tcpioteclipseorg1883/
+/ErrorLog.txt
+/ProxyRequestLog.txt
+/ProxyResponseLog.txt

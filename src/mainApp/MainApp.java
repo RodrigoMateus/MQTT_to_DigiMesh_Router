@@ -94,6 +94,9 @@ public class MainApp {
 			myDevice.open();
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
 			myDevice.setReceiveTimeout(TIMEOUT_FOR_SYNC_OPERATIONS);
+
+			System.out.println("ReceiveTimeout: " + myDevice.getReceiveTimeout());
+
 			myDevice.addModemStatusListener(modemStatusReceiveListener);
 			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
 

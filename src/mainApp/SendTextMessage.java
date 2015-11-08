@@ -27,9 +27,6 @@ public abstract class SendTextMessage {
 				Statistic.incrementCountNoModem();
 				System.out.println("Conect Error " + Statistic.getCountNoModem());
 
-				LogRecord.insertLog("log", (new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
-						+ ";Conect Error " + Statistic.getCountNoModem() + ";" + new String(dataToSend));
-
 			} else {
 				System.out.format("Sending data to %s >> %s\n", remoteDevice.getNodeID(), new String(dataToSend));
 
@@ -38,17 +35,11 @@ public abstract class SendTextMessage {
 
 				Statistic.incrementCountOK();
 				System.out.println("Success " + Statistic.getCountOK());
-
-				LogRecord.insertLog("log", (new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
-						+ ";Success " + Statistic.getCountOK() + ";" + new String(dataToSend));
 			}
 
 		} catch (XBeeException e) {
 			Statistic.incrementCountBadPack();
 			System.out.println("Error " + Statistic.getCountBadPack());
-
-			LogRecord.insertLog("log", (new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss").format(new Date())))
-					+ ";Send Error " + Statistic.getCountBadPack() + ";" + new String(dataToSend));
 
 			e.printStackTrace();
 

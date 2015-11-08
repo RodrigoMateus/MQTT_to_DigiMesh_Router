@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,6 +13,7 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
+import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.radiolibrary.ProxyResponse;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
@@ -62,6 +65,11 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 				byteArrayOutputStream.reset();
 
 				ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
+				LogRecord.insertLog("ProxyResponseLog",
+						new String(proxyResponse.getMqttClientId()) + ";" + new String(proxyResponse.getIdMessage())
+								+ ";" + new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
+								+ ";" + new String(proxyResponse.getBody()));
+
 				System.out.println("Chegou a resposta!!!");
 
 				new MQTTMonitor().sendMQTT(proxyResponse, payload);

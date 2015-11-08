@@ -1,5 +1,8 @@
 package mainApp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -11,6 +14,7 @@ import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.Statistic;
 import com.maykot.radiolibrary.ErrorCode;
+import com.maykot.radiolibrary.ProxyRequest;
 import com.maykot.radiolibrary.ProxyResponse;
 
 public class RouterMqtt implements MqttCallback {
@@ -58,6 +62,12 @@ public class RouterMqtt implements MqttCallback {
 			byte[] mqttClientId = clientId.getBytes();
 			String messageId = topicWords[3];
 
+			ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(message.getPayload());
+			LogRecord.insertLog("ProxyRequestLog",
+					clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
+							+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+							+ new String(proxyRequest.getBody()));
+
 			byte[] noMessage = new String("noMessage").getBytes();
 
 			try {
@@ -67,23 +77,37 @@ public class RouterMqtt implements MqttCallback {
 						MainApp.remoteDevice);
 				SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_SEND, MainApp.remoteDevice);
 			} catch (TransmitException e) {
-				LogRecord.insertLog("log", new String("TransmitException ERROR"));
+				LogRecord.insertLog("ErrorLog",
+						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
+								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+								+ "TransmitException ERROR");
 				System.out.println("604: TransmitException ERROR");
 				Statistic.incrementCountBadPack();
 				sendErrorMessage(604, clientId, messageId, ErrorCode.e604);
 
 			} catch (TimeoutException e) {
-				LogRecord.insertLog("log", new String("TimeOut ERROR"));
+				LogRecord.insertLog("ErrorLog",
+						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
+								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+								+ "TimeOut ERROR");
 				System.out.println("605: TimeOut ERROR");
 				Statistic.incrementCountBadPack();
 				sendErrorMessage(605, clientId, messageId, ErrorCode.e605);
 
 			} catch (XBeeException e) {
+				LogRecord.insertLog("ErrorLog",
+						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
+								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+								+ "XBeeException ERROR");
 				Statistic.incrementCountBadPack();
 				e.printStackTrace();
 				sendErrorMessage(606, clientId, messageId, ErrorCode.e606);
 
 			} catch (Exception e) {
+				LogRecord.insertLog("ErrorLog",
+						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
+								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+								+ "Exception ERROR");
 				sendErrorMessage(607, clientId, messageId, ErrorCode.e607);
 			}
 
