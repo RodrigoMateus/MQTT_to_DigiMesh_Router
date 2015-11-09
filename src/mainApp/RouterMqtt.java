@@ -61,12 +61,19 @@ public class RouterMqtt implements MqttCallback {
 			String clientId = topicWords[2];
 			byte[] mqttClientId = clientId.getBytes();
 			String messageId = topicWords[3];
-
+			String body = null;
+			
 			ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(message.getPayload());
+
+			if(proxyRequest.getBody() == null)
+				body = "no body";
+			else
+				new String(proxyRequest.getBody());
+
 			LogRecord.insertLog("ProxyRequestLog",
 					clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
 							+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
-							+ new String(proxyRequest.getBody()));
+							+ body);
 
 			byte[] noMessage = new String("noMessage").getBytes();
 

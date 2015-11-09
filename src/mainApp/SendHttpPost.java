@@ -1,13 +1,10 @@
 package mainApp;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.exceptions.TimeoutException;
-import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.Statistic;
 
 public class SendHttpPost {
