@@ -1,13 +1,9 @@
 package mainApp;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeNetwork;
 import com.digi.xbee.api.exceptions.XBeeException;
-import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.Statistic;
 
 public abstract class SendTextMessage {
