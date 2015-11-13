@@ -88,6 +88,7 @@ public class MainApp {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public static void openDevice() {
@@ -112,6 +113,7 @@ public class MainApp {
 	public static void discoverDevice() throws XBeeException {
 		// Obtain the remote XBee device from the XBee network.
 		XBeeNetwork xbeeNetwork = myDevice.getNetwork();
+
 		do {
 			remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
 			System.out.println(remoteDevice.getPowerLevel());
