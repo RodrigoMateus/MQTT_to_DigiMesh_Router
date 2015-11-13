@@ -68,7 +68,7 @@ public class RouterMqtt implements MqttCallback {
 			if(proxyRequest.getBody() == null)
 				body = "no body";
 			else
-				new String(proxyRequest.getBody());
+				body = new String(proxyRequest.getBody());
 
 			LogRecord.insertLog("ProxyRequestLog",
 					clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
