@@ -75,6 +75,7 @@ public class MainApp {
 		new Statistic();
 
 		myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
+
 		modemStatusReceiveListener = new ModemStatusReceiveListener();
 
 		openDevice();
@@ -87,6 +88,7 @@ public class MainApp {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public static void openDevice() {
@@ -100,16 +102,25 @@ public class MainApp {
 			myDevice.addModemStatusListener(modemStatusReceiveListener);
 			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
 
-			// Obtain the remote XBee device from the XBee network.
-			XBeeNetwork xbeeNetwork = myDevice.getNetwork();
-			remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
-			if (remoteDevice == null) {
-				System.out.println("Couldn't find the radio modem '" + REMOTE_NODE_IDENTIFIER + ".");
-				Statistic.incrementCountNoModem();
-			}
+			discoverDevice();
+
 		} catch (XBeeException e) {
 			e.printStackTrace();
 			// System.exit(1);
 		}
+	}
+
+	public static void discoverDevice() throws XBeeException {
+		// Obtain the remote XBee device from the XBee network.
+		XBeeNetwork xbeeNetwork = myDevice.getNetwork();
+
+		do {
+			remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
+			System.out.println(remoteDevice.getPowerLevel());
+			if (remoteDevice == null) {
+				System.out.println("Couldn't find the radio modem '" + REMOTE_NODE_IDENTIFIER + ".");
+				Statistic.incrementCountNoModem();
+			}
+		} while (remoteDevice == null);
 	}
 }
