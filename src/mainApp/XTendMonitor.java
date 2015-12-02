@@ -14,7 +14,7 @@ public class XTendMonitor extends Thread {
 
 		while (true) {
 			try {
-				MainApp.myDevice.getPowerLevel().getValue();
+				System.out.println(MainApp.myDevice.getPowerLevel().getValue());
 			} catch (TimeoutException e1) {
 			} catch (Exception e1) {
 				System.out.println("Reset");

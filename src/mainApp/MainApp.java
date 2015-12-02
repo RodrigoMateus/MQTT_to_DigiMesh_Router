@@ -5,6 +5,7 @@ package mainApp;
  ***************************/
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -16,6 +17,7 @@ import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.APIOutputMode;
 import com.digi.xbee.api.utils.DeviceConfig;
 import com.digi.xbee.api.utils.LogRecord;
+import com.digi.xbee.api.utils.SerialPorts;
 import com.digi.xbee.api.utils.Statistic;
 
 public class MainApp {
@@ -23,6 +25,7 @@ public class MainApp {
 	/* XTends */
 	static DigiMeshDevice myDevice;
 	static RemoteXBeeDevice remoteDevice;
+	static DeviceConfig deviceConfig;
 	static String XTEND_PORT = null;
 	static int XTEND_BAUD_RATE;
 	static int TIMEOUT_FOR_SYNC_OPERATIONS = 10000; // 10 seconds
@@ -57,7 +60,7 @@ public class MainApp {
 		System.out.println(" +---------------------------+\n");
 
 		try {
-			DeviceConfig deviceConfig = new DeviceConfig();
+			deviceConfig = new DeviceConfig();
 
 			XTEND_PORT = deviceConfig.getXTendPort();
 			XTEND_BAUD_RATE = deviceConfig.getXTendBaudRate();
@@ -73,15 +76,19 @@ public class MainApp {
 
 		new LogRecord();
 		new Statistic();
-
-		myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
-
 		modemStatusReceiveListener = new ModemStatusReceiveListener();
 
 		openDevice();
 
 		try {
-			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID);
+			discoverDevice();
+		} catch (XBeeException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, null);
 			mqttClient.setCallback(new RouterMqtt());
 			mqttClient.connect();
 			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
@@ -89,25 +96,42 @@ public class MainApp {
 			e.printStackTrace();
 		}
 
+		new XTendMonitor().run();
+
+	}
+
+	public static DigiMeshDevice openDevice(String port, int bd) throws Exception {
+		DigiMeshDevice device = new DigiMeshDevice(port, bd);
+		device.open();
+		device.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
+		// myDevice.setReceiveTimeout(TIMEOUT_FOR_SYNC_OPERATIONS);
+		device.addModemStatusListener(modemStatusReceiveListener);
+		device.addExplicitDataListener(new ExplicitDataReceiveListener());
+		return device;
 	}
 
 	public static void openDevice() {
 		try {
-			myDevice.open();
-			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
-			myDevice.setReceiveTimeout(TIMEOUT_FOR_SYNC_OPERATIONS);
-
-			System.out.println("ReceiveTimeout: " + myDevice.getReceiveTimeout());
-
-			myDevice.addModemStatusListener(modemStatusReceiveListener);
-			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
-
-			discoverDevice();
-
-		} catch (XBeeException e) {
+			XTEND_PORT = deviceConfig.getXTendPort();
+			myDevice = openDevice(XTEND_PORT, XTEND_BAUD_RATE);
+			return;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			// System.exit(1);
 		}
+		for (String port : SerialPorts.getSerialPortList()) {
+			try {
+				System.out.println("Try " + port);
+				myDevice = openDevice(port, XTEND_BAUD_RATE);
+				return;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("openDevice() ERROR");
+			}
+		}
+		System.out.println("Modem not found!");
+		openDevice();
+
 	}
 
 	public static void discoverDevice() throws XBeeException {
@@ -116,11 +140,11 @@ public class MainApp {
 
 		do {
 			remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
-			System.out.println(remoteDevice.getPowerLevel());
 			if (remoteDevice == null) {
 				System.out.println("Couldn't find the radio modem '" + REMOTE_NODE_IDENTIFIER + ".");
 				Statistic.incrementCountNoModem();
 			}
 		} while (remoteDevice == null);
+		System.out.println(remoteDevice.getPowerLevel());
 	}
 }
