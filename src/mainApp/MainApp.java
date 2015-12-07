@@ -5,7 +5,6 @@ package mainApp;
  ***************************/
 
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -86,7 +85,7 @@ public class MainApp {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+	
 		try {
 			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, null);
 			mqttClient.setCallback(new RouterMqtt());
@@ -95,8 +94,9 @@ public class MainApp {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-
-		new XTendMonitor().run();
+		
+		//new XTendMonitor().run();
+		
 
 	}
 
