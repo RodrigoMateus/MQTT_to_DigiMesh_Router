@@ -21,3 +21,8 @@ Projeto TCC - roteador de mensagem entre MQTT e rede DigiMesh
   
 5. Instalar Acess Point
   - https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software
+
+### Driver para Cabo USB-to-Serial
+
+- Windows 8.1
+https://drive.google.com/file/d/0B9VNcwdyevIabE1xWk9xYmpvYjQ/view?usp=sharing
