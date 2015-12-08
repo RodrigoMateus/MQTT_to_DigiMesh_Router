@@ -4,8 +4,6 @@ import java.util.Arrays;
 
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.RemoteXBeeDevice;
-import com.digi.xbee.api.exceptions.TimeoutException;
-import com.digi.xbee.api.utils.Statistic;
 
 public class SendHttpPost {
 
@@ -30,17 +28,13 @@ public class SendHttpPost {
 			int last = MainApp.PAYLOAD;
 
 			do {
-				try {
-					byte[] partOfData = Arrays.copyOfRange(dataToSend, first, last);
-					myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
-							partOfData);
-					first = last;
-					last = last + MainApp.PAYLOAD;
-					if (last > dataSize)
-						last = dataSize;
-					Statistic.incrementCountOK();
-				} catch (TimeoutException e) {
-					System.out.println("TimeOut ERROR");
+				byte[] partOfData = Arrays.copyOfRange(dataToSend, first, last);
+				myDevice.sendExplicitData(remoteDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
+						partOfData);
+				first = last;
+				last = last + MainApp.PAYLOAD;
+				if (last > dataSize) {
+					last = dataSize;
 				}
 			} while (first < dataSize);
 			break;

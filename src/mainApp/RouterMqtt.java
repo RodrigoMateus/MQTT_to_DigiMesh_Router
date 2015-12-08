@@ -12,8 +12,8 @@ import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.TransmitException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.utils.LogRecord;
-import com.digi.xbee.api.utils.Statistic;
 import com.maykot.radiolibrary.ErrorCode;
+import com.maykot.radiolibrary.ErrorMessage;
 import com.maykot.radiolibrary.ProxyRequest;
 import com.maykot.radiolibrary.ProxyResponse;
 
@@ -33,7 +33,7 @@ public class RouterMqtt implements MqttCallback {
 		try {
 			byte[] dataToSend = null;
 			dataToSend = new String("Teste: Servidor On-line").getBytes();
-			SendTextMessage.send(MainApp.myDevice, dataToSend, MainApp.ENDPOINT_TXT, MainApp.REMOTE_NODE_IDENTIFIER);
+			SendTextMessage.send(dataToSend, MainApp.ENDPOINT_TXT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,7 +71,7 @@ public class RouterMqtt implements MqttCallback {
 				body = new String(proxyRequest.getBody());
 
 			LogRecord.insertLog("ProxyRequestLog", clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
-					+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";" + body);
+					+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";" + body);
 
 			byte[] noMessage = new String("noMessage").getBytes();
 
@@ -84,43 +84,35 @@ public class RouterMqtt implements MqttCallback {
 			} catch (TransmitException e) {
 				LogRecord.insertLog("ErrorLog",
 						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
-								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
-								+ "TransmitException ERROR");
-				System.out.println("604: TransmitException ERROR");
-				Statistic.incrementCountBadPack();
-				sendErrorMessage(604, clientId, messageId, ErrorCode.e604);
+								+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";"
+								+ ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
+				System.out.println(
+						ErrorMessage.TRANSMIT_EXCEPTION.getValue() + ": " + ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
+				sendErrorMessage(ErrorMessage.TRANSMIT_EXCEPTION.getValue(), clientId, messageId, ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
 
 			} catch (TimeoutException e) {
 				LogRecord.insertLog("ErrorLog",
 						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
-								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+								+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";"
 								+ "TimeOut ERROR");
 				System.out.println("605: TimeOut ERROR");
-				Statistic.incrementCountBadPack();
 				sendErrorMessage(605, clientId, messageId, ErrorCode.e605);
 
 			} catch (XBeeException e) {
 				LogRecord.insertLog("ErrorLog",
 						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
-								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+								+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";"
 								+ "XBeeException ERROR");
-				Statistic.incrementCountBadPack();
 				e.printStackTrace();
 				sendErrorMessage(606, clientId, messageId, ErrorCode.e606);
 
 			} catch (Exception e) {
 				LogRecord.insertLog("ErrorLog",
 						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
-								+ new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())) + ";"
+								+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";"
 								+ "Exception ERROR");
 				sendErrorMessage(607, clientId, messageId, ErrorCode.e607);
 			}
-
-			// System.out.println("Total Success " + Statistic.getCountOK());
-			// System.out.println("Total Conect Error " +
-			// Statistic.getCountNoModem());
-			// System.out.println("Total Send Error " +
-			// Statistic.getCountBadPack());
 		}
 
 		// Se a mensagem contém um comando JAVA
@@ -142,8 +134,7 @@ public class RouterMqtt implements MqttCallback {
 
 		// Se a mensagem contém apenas texto
 		if (topic.toLowerCase().contains("text")) {
-			SendTextMessage.send(MainApp.myDevice, message.getPayload(), MainApp.ENDPOINT_TXT,
-					MainApp.REMOTE_NODE_IDENTIFIER);
+			SendTextMessage.send(message.getPayload(), MainApp.ENDPOINT_TXT);
 		}
 	}
 

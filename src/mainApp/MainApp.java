@@ -17,7 +17,6 @@ import com.digi.xbee.api.models.APIOutputMode;
 import com.digi.xbee.api.utils.DeviceConfig;
 import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.SerialPorts;
-import com.digi.xbee.api.utils.Statistic;
 
 public class MainApp {
 
@@ -74,10 +73,11 @@ public class MainApp {
 		}
 
 		new LogRecord();
-		new Statistic();
 		modemStatusReceiveListener = new ModemStatusReceiveListener();
 
 		openDevice();
+
+		new XTendMonitor().run();
 
 		try {
 			discoverDevice();
@@ -85,7 +85,7 @@ public class MainApp {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	
+
 		try {
 			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, null);
 			mqttClient.setCallback(new RouterMqtt());
@@ -94,9 +94,33 @@ public class MainApp {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-		
-		//new XTendMonitor().run();
-		
+	}
+
+	public static void openDevice() {
+		try {
+			XTEND_PORT = deviceConfig.getXTendPort();
+			myDevice = openDevice(XTEND_PORT, XTEND_BAUD_RATE);
+			System.out.println("Was found local radio " + myDevice.getNodeID() + " (PowerLevel: "
+					+ myDevice.getPowerLevel() + ").");
+			return;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (String port : SerialPorts.getSerialPortList()) {
+			try {
+				System.out.println("Try " + port);
+				myDevice = openDevice(port, XTEND_BAUD_RATE);
+				System.out.println("Was found local radio " + myDevice.getNodeID() + " (PowerLevel: "
+						+ myDevice.getPowerLevel() + ").");
+				return;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("openDevice() ERROR");
+			}
+		}
+		System.out.println("Local Radio not found! Try openDevice() again.");
+		openDevice();
 
 	}
 
@@ -110,30 +134,6 @@ public class MainApp {
 		return device;
 	}
 
-	public static void openDevice() {
-		try {
-			XTEND_PORT = deviceConfig.getXTendPort();
-			myDevice = openDevice(XTEND_PORT, XTEND_BAUD_RATE);
-			return;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for (String port : SerialPorts.getSerialPortList()) {
-			try {
-				System.out.println("Try " + port);
-				myDevice = openDevice(port, XTEND_BAUD_RATE);
-				return;
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("openDevice() ERROR");
-			}
-		}
-		System.out.println("Modem not found!");
-		openDevice();
-
-	}
-
 	public static void discoverDevice() throws XBeeException {
 		// Obtain the remote XBee device from the XBee network.
 		XBeeNetwork xbeeNetwork = myDevice.getNetwork();
@@ -141,10 +141,11 @@ public class MainApp {
 		do {
 			remoteDevice = xbeeNetwork.discoverDevice(REMOTE_NODE_IDENTIFIER);
 			if (remoteDevice == null) {
-				System.out.println("Couldn't find the radio modem '" + REMOTE_NODE_IDENTIFIER + ".");
-				Statistic.incrementCountNoModem();
+				System.out.println("Couldn't find the Radio " + REMOTE_NODE_IDENTIFIER + ".");
 			}
 		} while (remoteDevice == null);
-		System.out.println(remoteDevice.getPowerLevel());
+
+		System.out.println("Was found remote radio " + REMOTE_NODE_IDENTIFIER + " (PowerLevel: "
+				+ remoteDevice.getPowerLevel() + ").");
 	}
 }

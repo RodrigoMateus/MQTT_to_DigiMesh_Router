@@ -14,11 +14,11 @@ public class XTendMonitor extends Thread {
 
 		while (true) {
 			try {
-				// System.out.println(MainApp.myDevice.getPowerLevel().getValue());
 				MainApp.myDevice.getPowerLevel().getValue();
 			} catch (TimeoutException e1) {
+				System.out.println("TimeoutException in Local Radio connection. Check connection.");
 			} catch (Exception e1) {
-				System.out.println("Reset");
+				System.out.println("Local Radio connection has been lost. Check connection.");
 				MainApp.openDevice();
 			}
 

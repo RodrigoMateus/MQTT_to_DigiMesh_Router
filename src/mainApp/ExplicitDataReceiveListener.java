@@ -67,7 +67,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 				ProxyResponse proxyResponse = (ProxyResponse) SerializationUtils.deserialize(payload);
 				LogRecord.insertLog("ProxyResponseLog",
 						new String(proxyResponse.getMqttClientId()) + ";" + new String(proxyResponse.getIdMessage())
-								+ ";" + new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
+								+ ";" + new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date()))
 								+ ";" + new String(proxyResponse.getBody()));
 
 				System.out.println("Chegou a resposta!!!");

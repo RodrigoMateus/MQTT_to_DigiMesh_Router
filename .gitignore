@@ -64,3 +64,4 @@ bin/.gitignore
 /ProxyRequestLog.txt
 /ProxyResponseLog.txt
 /Maykot_Router-tcp1270011883/
+/DeviceConfig.properties
