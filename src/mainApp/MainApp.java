@@ -77,8 +77,6 @@ public class MainApp {
 
 		openDevice();
 
-		new XTendMonitor().run();
-
 		try {
 			discoverDevice();
 		} catch (XBeeException e1) {
@@ -94,13 +92,15 @@ public class MainApp {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
+		
+		new XTendMonitor().run();
 	}
 
 	public static void openDevice() {
 		try {
 			XTEND_PORT = deviceConfig.getXTendPort();
 			myDevice = openDevice(XTEND_PORT, XTEND_BAUD_RATE);
-			System.out.println("Was found local radio " + myDevice.getNodeID() + " (PowerLevel: "
+			System.out.println("Was found local radio " + myDevice.getNodeID() + " (PowerLevel "
 					+ myDevice.getPowerLevel() + ").");
 			return;
 		} catch (Exception e) {
@@ -145,7 +145,7 @@ public class MainApp {
 			}
 		} while (remoteDevice == null);
 
-		System.out.println("Was found remote radio " + REMOTE_NODE_IDENTIFIER + " (PowerLevel: "
+		System.out.println("Was found remote radio " + REMOTE_NODE_IDENTIFIER + " (PowerLevel "
 				+ remoteDevice.getPowerLevel() + ").");
 	}
 }
