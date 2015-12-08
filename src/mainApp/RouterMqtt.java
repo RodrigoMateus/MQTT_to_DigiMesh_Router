@@ -32,9 +32,11 @@ public class RouterMqtt implements MqttCallback {
 	public void testeSendMessage() {
 		try {
 			byte[] dataToSend = null;
-			dataToSend = new String("Teste: Servidor On-line").getBytes();
+			dataToSend = new String("This is a message boot test!").getBytes();
 			SendTextMessage.send(dataToSend, MainApp.ENDPOINT_TXT);
+			System.out.println("Boot test SUCCESS!");
 		} catch (Exception e) {
+			System.out.println("Boot test FAILED!");
 			e.printStackTrace();
 		}
 	}
@@ -86,17 +88,20 @@ public class RouterMqtt implements MqttCallback {
 						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
 								+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";"
 								+ ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
-				System.out.println(
-						ErrorMessage.TRANSMIT_EXCEPTION.getValue() + ": " + ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
-				sendErrorMessage(ErrorMessage.TRANSMIT_EXCEPTION.getValue(), clientId, messageId, ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
+				System.out.println(ErrorMessage.TRANSMIT_EXCEPTION.getValue() + ": "
+						+ ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
+				sendErrorMessage(ErrorMessage.TRANSMIT_EXCEPTION.getValue(), clientId, messageId,
+						ErrorMessage.TRANSMIT_EXCEPTION.getDescription());
 
 			} catch (TimeoutException e) {
 				LogRecord.insertLog("ErrorLog",
 						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
 								+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";"
-								+ "TimeOut ERROR");
-				System.out.println("605: TimeOut ERROR");
-				sendErrorMessage(605, clientId, messageId, ErrorCode.e605);
+								+ ErrorMessage.TIMEOUT_ERROR.getDescription());
+				System.out
+						.println("Erro " + ErrorMessage.TIMEOUT_ERROR.getValue() + ": " + ErrorMessage.TIMEOUT_ERROR.getDescription());
+				sendErrorMessage(ErrorMessage.TIMEOUT_ERROR.getValue(), clientId, messageId,
+						ErrorMessage.TIMEOUT_ERROR.getDescription());
 
 			} catch (XBeeException e) {
 				LogRecord.insertLog("ErrorLog",

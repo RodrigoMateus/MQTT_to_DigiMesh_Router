@@ -100,7 +100,7 @@ public class MainApp {
 		try {
 			XTEND_PORT = deviceConfig.getXTendPort();
 			myDevice = openDevice(XTEND_PORT, XTEND_BAUD_RATE);
-			System.out.println("Was found local radio " + myDevice.getNodeID() + " (PowerLevel "
+			System.out.println("Was found LOCAL radio " + myDevice.getNodeID() + " (PowerLevel "
 					+ myDevice.getPowerLevel() + ").");
 			return;
 		} catch (Exception e) {
@@ -111,7 +111,7 @@ public class MainApp {
 			try {
 				System.out.println("Try " + port);
 				myDevice = openDevice(port, XTEND_BAUD_RATE);
-				System.out.println("Was found local radio " + myDevice.getNodeID() + " (PowerLevel: "
+				System.out.println("Was found LOCAL radio " + myDevice.getNodeID() + " (PowerLevel: "
 						+ myDevice.getPowerLevel() + ").");
 				return;
 			} catch (Exception e) {
@@ -119,7 +119,7 @@ public class MainApp {
 				System.out.println("openDevice() ERROR");
 			}
 		}
-		System.out.println("Local Radio not found! Try openDevice() again.");
+		System.out.println("LOCAL Radio not found! Try openDevice() again.");
 		openDevice();
 
 	}
@@ -145,7 +145,7 @@ public class MainApp {
 			}
 		} while (remoteDevice == null);
 
-		System.out.println("Was found remote radio " + REMOTE_NODE_IDENTIFIER + " (PowerLevel "
+		System.out.println("Was found REMOTE radio " + REMOTE_NODE_IDENTIFIER + " (PowerLevel "
 				+ remoteDevice.getPowerLevel() + ").");
 	}
 }
