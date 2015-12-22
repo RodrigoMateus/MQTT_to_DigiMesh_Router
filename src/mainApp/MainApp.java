@@ -7,8 +7,6 @@ package mainApp;
 import java.io.IOException;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeNetwork;
@@ -84,15 +82,17 @@ public class MainApp {
 			e1.printStackTrace();
 		}
 
-		try {
-			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, null);
-			mqttClient.setCallback(new RouterMqtt());
-			mqttClient.connect();
-			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
-		} catch (MqttException e) {
-			e.printStackTrace();
-		}
-		
+		new RouterMqtt();
+
+//		try {
+//			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, null);
+//			mqttClient.setCallback(new RouterMqtt());
+//			mqttClient.connect();
+//			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
+//		} catch (MqttException e) {
+//			e.printStackTrace();
+//		}
+
 		new XTendMonitor().run();
 	}
 

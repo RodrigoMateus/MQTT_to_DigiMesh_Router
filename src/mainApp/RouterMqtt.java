@@ -1,7 +1,10 @@
 package mainApp;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -29,12 +32,54 @@ public class RouterMqtt implements MqttCallback {
 		}
 	}
 
+//	public void testeSendMessage() {
+//		try {
+//			byte[] dataToSend = null;
+//			dataToSend = new String("This is a message boot test!").getBytes();
+//			SendTextMessage.send(dataToSend, MainApp.ENDPOINT_TXT);
+//			System.out.println("Boot test SUCCESS!");
+//		} catch (Exception e) {
+//			System.out.println("Boot test FAILED!");
+//			e.printStackTrace();
+//		}
+//	}
+
 	public void testeSendMessage() {
 		try {
-			byte[] dataToSend = null;
-			dataToSend = new String("This is a message boot test!").getBytes();
-			SendTextMessage.send(dataToSend, MainApp.ENDPOINT_TXT);
-			System.out.println("Boot test SUCCESS!");
+
+			ProxyRequest proxyRequest = new ProxyRequest();
+			proxyRequest.setVerb("POST");
+			proxyRequest.setUrl("http://localhost:8000");
+
+			HashMap<String, String> header = new HashMap<String, String>();
+			header.put("content-type", "image/png");
+			header.put("proxy-response", "0");
+			proxyRequest.setHeader(header);
+			proxyRequest.setIdMessage("1");
+
+			String clientId = "clientId_Test";
+			byte[] mqttClientId = clientId.getBytes();
+			byte[] noMessage = new String("noMessage").getBytes();
+			byte[] dataToSend = Files.readAllBytes(new File("image50KB.png").toPath());
+
+			proxyRequest.setBody(dataToSend);
+
+			SendHttpPost.send(MainApp.myDevice, mqttClientId, MainApp.ENDPOINT_HTTP_POST_INIT, MainApp.remoteDevice);
+
+			System.out.println("POST INIT SUCCESS!");
+
+			SendHttpPost.send(MainApp.myDevice,
+					new String(
+							"As diversas finalidades do trabalho acadêmico podem se resumir em apresentar, demonstrar, difundir, recuperar ou contestar o conhecimento produzido, acumulado ou transmitido. Ao apresentar resultados, o texto acadêmico atende à necessidade de publicidade relativa ao processo de conhecimento. A pesquisa realizada, a ideia concebida ou a dedução feita perecem se não vierem a público; por esse motivo existem diversos canais de publicidade adequados aos diferentes trabalhos: as defesas públicas, os periódicos, as comunicações e a multimídia virtual são alguns desses. A demonstração do conhecimento é necessidade na comunidade acadêmica, onde esse conhecimento é o critério de mérito e acesso. Assim, existem as provas, concursos e diversos outros processos de avaliação pelos quais se constata a construção ou transmissão do saber. Difundir o conhecimento às esferas externas à comunidade acadêmica é atividade cada vez mais presente nas instituições de ensino, pesquisa e extensão, e o texto correspondente a essa prática tem característica própria sem abandonar a maior parte dos critérios de cientificidade. A recuperação do conhecimento é outra finalidade do texto acadêmico. Com bastante freqüência, parcelas significativas do conhecimento caem no esquecimento das comunidades e das pessoas; a recuperação e manutenção ativa da maior diversidade de saberes é finalidade importante de atividades científicas objeto da produção de texto. Quase todo conhecimento produzido é contestado. Essa contestação, em que não constitua conhecimento diferenciado, certamente é etapa contribuinte no processo da construção do saber que contesta, quer por validá-lo, quer por refutá-lo. As finalidades do texto acadêmico certamente não se esgotam nessas, mas ficam aqui exemplificadas. Para atender à diversidade dessas finalidades, existe a multiplicidade de formas, entre as quais se encontram alguns conhecidos tipos, sobre os quais se estabelece conceito difuso.")
+									.getBytes(),
+					MainApp.ENDPOINT_HTTP_POST_DATA, MainApp.remoteDevice);
+
+			System.out.println("POST DATA SUCCESS!");
+			
+			SendHttpPost.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_HTTP_POST_SEND, MainApp.remoteDevice);
+			
+			System.out.println("POST SEND SUCCESS!");
+
 		} catch (Exception e) {
 			System.out.println("Boot test FAILED!");
 			e.printStackTrace();
@@ -98,8 +143,8 @@ public class RouterMqtt implements MqttCallback {
 						clientId + ";" + new String(proxyRequest.getIdMessage()) + ";"
 								+ new String(new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss:SSS").format(new Date())) + ";"
 								+ ErrorMessage.TIMEOUT_ERROR.getDescription());
-				System.out
-						.println("Erro " + ErrorMessage.TIMEOUT_ERROR.getValue() + ": " + ErrorMessage.TIMEOUT_ERROR.getDescription());
+				System.out.println("Erro " + ErrorMessage.TIMEOUT_ERROR.getValue() + ": "
+						+ ErrorMessage.TIMEOUT_ERROR.getDescription());
 				sendErrorMessage(ErrorMessage.TIMEOUT_ERROR.getValue(), clientId, messageId,
 						ErrorMessage.TIMEOUT_ERROR.getDescription());
 
