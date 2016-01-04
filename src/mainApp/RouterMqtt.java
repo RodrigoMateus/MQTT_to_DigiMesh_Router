@@ -84,6 +84,7 @@ public class RouterMqtt implements MqttCallback {
 			System.out.println("Boot test FAILED!");
 			e.printStackTrace();
 		}
+		System.exit(0);
 	}
 
 	@Override
