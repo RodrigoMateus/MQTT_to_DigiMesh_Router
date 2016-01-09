@@ -14,11 +14,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.TransmitException;
 import com.digi.xbee.api.exceptions.XBeeException;
-import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.radiolibrary.ErrorCode;
 import com.maykot.radiolibrary.ErrorMessage;
 import com.maykot.radiolibrary.ProxyRequest;
 import com.maykot.radiolibrary.ProxyResponse;
+import com.maykot.utils.LogRecord;
 
 public class RouterMqtt implements MqttCallback {
 

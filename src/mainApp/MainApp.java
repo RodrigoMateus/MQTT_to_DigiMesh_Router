@@ -12,9 +12,9 @@ import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeNetwork;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.APIOutputMode;
-import com.digi.xbee.api.utils.DeviceConfig;
-import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.SerialPorts;
+import com.maykot.utils.DeviceConfig;
+import com.maykot.utils.LogRecord;
 
 public class MainApp {
 
@@ -84,14 +84,14 @@ public class MainApp {
 
 		new RouterMqtt();
 
-//		try {
-//			mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, null);
-//			mqttClient.setCallback(new RouterMqtt());
-//			mqttClient.connect();
-//			mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
-//		} catch (MqttException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, null);
+		// mqttClient.setCallback(new RouterMqtt());
+		// mqttClient.connect();
+		// mqttClient.subscribe(SUBSCRIBED_TOPIC, QoS);
+		// } catch (MqttException e) {
+		// e.printStackTrace();
+		// }
 
 		new XTendMonitor().run();
 	}

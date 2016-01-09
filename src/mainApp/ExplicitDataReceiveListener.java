@@ -13,8 +13,8 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
-import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.radiolibrary.ProxyResponse;
+import com.maykot.utils.LogRecord;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
